@@ -2,13 +2,13 @@ from definitions import Environment
 import numpy as np
 import matplotlib.pyplot as plt
 
-class Room(Environment):
 
-    """ This class implements an an environment that represents a room with obstacles. 
+class Room(Environment):
+    """ This class implements an an environment that represents a room with obstacles.
     """
 
     def __init__(self, room=[], initial_position=[0, 0], target=[], prob=0.3, n=10, plot_on=False):
-        
+
         """ Room constructor
 
         Args:
@@ -20,7 +20,7 @@ class Room(Environment):
             plot_on: Whether the environment and agent behaviour will be plotted
 
         """
-        
+
         if not room:
             self.room = np.zeros((n, n))
 
@@ -33,7 +33,7 @@ class Room(Environment):
         self.target = np.array(self.room.shape) - 1 if not target else np.array(target)
 
         # Makes sure that the target position does not have an obstacle
-        self.room[self.target[0]][self.target[1]] = 0 
+        self.room[self.target[0]][self.target[1]] = 0
 
         self.initial_position = np.array(initial_position)
         self.current_position = np.array(initial_position)
