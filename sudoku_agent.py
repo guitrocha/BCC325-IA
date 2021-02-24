@@ -1,5 +1,6 @@
 from definitions import Agent
 import copy
+import time
 from os import system
 
 
@@ -41,12 +42,15 @@ class SudokuAgent(Agent):
                             if self.print_iterations:
                                 pp_sudoku(self.sudoku)
                                 system('cls')
-
+                            
                             self.act()
                             self.sudoku[i][j] = 0
                     return
 
+        input('Solved - Press ENTER to see solution')
         pp_sudoku(self.sudoku)
+        input('Press ENTER to get out of here')
+
 
 
 def pp_sudoku(sudoku):
@@ -58,12 +62,13 @@ def pp_sudoku(sudoku):
 
     for i in range(len(sudoku)):
         if i % 3 == 0:
-            print('-------------------------------')
+            print('-------------------------------', flush=True)
         row = ''
         for j in range(len(sudoku[0])):
             if j % 3 == 0:
                 row = row + '|'
             row = row + ' ' + str(sudoku[i][j]) + ' '
-        print(row + '|')
+        print(row + '|', flush=True)
 
-    print('-------------------------------')
+    print('-------------------------------', flush=True)
+    #time.sleep(1)
