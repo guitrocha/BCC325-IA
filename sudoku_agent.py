@@ -42,7 +42,7 @@ class SudokuAgent(Agent):
                             if self.print_iterations:
                                 pp_sudoku(self.sudoku)
                                 system('cls')
-                            
+
                             self.act()
                             self.sudoku[i][j] = 0
                     return

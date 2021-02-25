@@ -33,7 +33,7 @@ s3 = [[0, 0, 0, 0, 9, 4, 0, 1, 0],
 
 
 # Create an environment
-env = Sudoku(s3, True)
+env = Sudoku(s2, True)
 
 # Creat an agent
 ag = SudokuAgent(env, False)
