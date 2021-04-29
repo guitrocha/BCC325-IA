@@ -18,4 +18,4 @@ consequences = ag.bottom_up()
 print(consequences)
 
 # Prove 'a'
-print(ag.top_down(['d']))
+print(ag.top_down(['a']))

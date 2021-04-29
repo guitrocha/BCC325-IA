@@ -1,10 +1,9 @@
 from knowledge_base import *
-
-
 class LogicalAgent():
 
-    def __init__(self, KB):
+    def __init__(self,KB):
         self.KB = KB
+        self.askable_atoms = [a.atom for a in KB.askables]
 
     # TODO
     def bottom_up(self):
@@ -12,30 +11,29 @@ class LogicalAgent():
         Returns:
             A list with all the logical consequences of KB
         '''
-        logical_list = []
+        C = []
 
         for ask in self.KB.askables:
-            if ask not in logical_list:
-                x = True if input(f'Is {ask.atom} true (y or n)? ') == 'y' else False
+            if ask not in C:
+                x = True if input(f'atom {ask.atom} is true (y or n)? ') == 'y' else False
 
                 if x:
-                    logical_list.append(ask.atom)
+                    C.append(ask.atom)
 
         while True:
             select = False
             for clause in self.KB.clauses:
-                if clause.head not in logical_list and (all(map(lambda x: x in logical_list, clause.body))):
-                    logical_list.append(clause.head)
+                if clause.head not in C and (all(map(lambda x: x in C, clause.body))):
+                    C.append(clause.head)
                     select = True
             if select == False:
                 break
-        return logical_list
+        return C
 
     # TODO
-    def top_down(self, query):
+    def top_down(self,query):
         '''Implements the top down proof strategy. Given a query (the atom that it wants to prove)
         it returns True if the query is a consequence of the knowledge base.
-
         Args:
             querry: The atom that should be proved
         Returns:
@@ -66,25 +64,41 @@ class LogicalAgent():
                 return False
 
         return True
-
+    
     # TODO
-    def explain(self, g):
+    def explain(self, g, explanation = set()):
         '''Implements the process of abductions. It tries to explain the atoms  in the list g using
          the assumable in KB.
         Args:
             g: A set of atoms that should be explained
-
+        
         Returns:
             A list of explanation for the atoms in g
         '''
+        if g:
+            selected = g[0]
+            if selected in self.KB.askables:
+                if self.ask_askable(selected):
+                    return self.explain(g[1:], explanation)
+                else:
+                    return []
+            elif selected in self.KB.assumables:
+                return self.explain(g[1:], explanation | {selected})
+            else:
+                l = []
+                for clause in self.KB.clauses_for_atom(selected):
+                    l = l + self.explain(clause.body + g[1:], explanation)
 
+                return l
+        else:
+            return [explanation]
 
-        explanation_list = []
-        for statement in self.KB.statements:
-            if isinstance(statement, Assumable):
-                explanation_list.append((statement.atom, [statement.atom]))
-        for clause in self.KB.clauses:
-            if all(map(lambda x: (x, ...) in explanation_list, clause.body)):
-                explanation_list.append((clause.head, [x[1] for x in explanation_list if x[0] in clause.body]))
+    def yes(self, ans):
+        """ Returns true if answer is yes
+        """
+        return ans.lower() in ['sim','s','yes','y']
 
-        return explanation_list
+    def ask_askable(self, atom):
+        """ Asks if atom is true
+        """
+        return input('Is {} true?'.format(atom))
